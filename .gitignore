@@ -1,0 +1,8 @@
+.DS_Store
+node_modules/
+.playwright-cli/
+output/
+googlecloud/
+codex_rubik_architecture_prompt.md
+*.log
+

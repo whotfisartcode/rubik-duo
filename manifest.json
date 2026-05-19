@@ -1,0 +1,18 @@
+{
+  "name": "Rubik Duo",
+  "short_name": "Rubik Duo",
+  "description": "Italian phrase practice from your own texts.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1774ed",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

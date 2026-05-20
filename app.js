@@ -28,7 +28,6 @@ const UI_TEXT = {
     useOffline: "Use this device offline",
     today: "Today",
     phrasesNeedCare: "Review queue: {count} {phraseWord}",
-    archiveCalm: "Your archive is calm",
     readySummary: "{ready} {textWord} ready for lessons. {phrases} {phraseWord} saved.",
     startSummary: "Start by adding one Italian text.",
     newText: "New Text",
@@ -200,7 +199,6 @@ const UI_TEXT = {
     useOffline: "Использовать это устройство офлайн",
     today: "Сегодня",
     phrasesNeedCare: "Нужно повторить: {count} {phraseWord}",
-    archiveCalm: "Архив спокоен",
     readySummary: "Готово к урокам: {ready} {textWord}. Сохранено: {phrases} {phraseWord}.",
     startSummary: "Начни с одного итальянского текста.",
     newText: "Новый текст",
@@ -1318,7 +1316,7 @@ function renderHome() {
     <section class="command-panel">
       <p class="eyebrow">${t("today")}</p>
       <div class="command-title">
-        <h1>${poop.length ? t("phrasesNeedCare", { count: poop.length, phraseWord: phraseWord(poop.length) }) : t("archiveCalm")}</h1>
+        ${poop.length ? `<h1>${t("phrasesNeedCare", { count: poop.length, phraseWord: phraseWord(poop.length) })}</h1>` : ""}
         <p>${state.texts.length ? t("readySummary", { ready: readyTexts, textWord: textWord(readyTexts), phrases: phrases.length, phraseWord: phraseWord(phrases.length) }) : t("startSummary")}</p>
       </div>
       <div class="quick-actions">

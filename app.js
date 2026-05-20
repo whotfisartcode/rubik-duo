@@ -10,6 +10,7 @@ const LANGUAGE_KEY = "rubik-duo-language-v1";
 const GOOGLE_CLIENT_ID = "959235616258-q20q1ckuj2089bmaf0moart8jgh5d8ff.apps.googleusercontent.com";
 const GOOGLE_SCOPES = "https://www.googleapis.com/auth/drive.appdata";
 const GOOGLE_ACCOUNT_ID = "google-drive";
+const GOOGLE_REDIRECT_STATE_KEY = "rubik-duo-google-redirect-state-v1";
 const DRIVE_FILE_NAME = "rubik-duo-state.json";
 const UI_TEXT = {
   en: {
@@ -192,6 +193,8 @@ const UI_TEXT = {
     googleClosed: "Google sign-in was closed or blocked",
     googleLoading: "Google sign-in is still loading. Try again in a moment.",
     googleFailed: "Google Drive connection failed",
+    googleRedirecting: "Google popup was blocked. Opening sign-in page...",
+    googleRedirectMismatch: "Google redirect was not accepted. Check the OAuth redirect URI.",
     googleReconnectFailed: "Google session could not be restored. Press Save to reconnect.",
     googleConnected: "Google Drive connected",
     driveSyncFailed: "Saved locally. Google Drive sync failed.",
@@ -389,6 +392,8 @@ const UI_TEXT = {
     googleClosed: "Вход через Google был закрыт или заблокирован",
     googleLoading: "Google вход еще загружается. Попробуй через пару секунд.",
     googleFailed: "Не удалось подключить Google Drive",
+    googleRedirecting: "Google окно заблокировано. Открываю страницу входа...",
+    googleRedirectMismatch: "Google redirect не принят. Проверь redirect URI в OAuth.",
     googleReconnectFailed: "Не удалось восстановить Google сессию. Нажми «Сохранить», чтобы подключиться заново.",
     googleConnected: "Google Drive подключен",
     driveSyncFailed: "Сохранено локально. Синхронизация с Google Drive не удалась.",
@@ -696,12 +701,17 @@ function initGoogleTokenClient() {
     client_id: GOOGLE_CLIENT_ID,
     scope: GOOGLE_SCOPES,
     callback: handleGoogleToken,
-    error_callback: () => {
+    error_callback: (error) => {
       if (googleAuthMode === "silent") {
         cloud.status = "offline";
         cloud.error = t("googleReconnectFailed");
         persistCloudMeta();
         render();
+        return;
+      }
+      if (error?.type === "popup_failed_to_open") {
+        notify(t("googleRedirecting"));
+        startGoogleRedirectAuth();
         return;
       }
       cloud.status = "error";
@@ -725,9 +735,95 @@ function connectGoogleDrive(options = {}) {
     client.requestAccessToken({ prompt });
   } catch {
     if (silent) return;
-    notify(t("googleLoading"));
-    render();
+    notify(t("googleRedirecting"));
+    startGoogleRedirectAuth({ prompt });
   }
+}
+
+function googleRedirectUri() {
+  const url = new URL(window.location.href);
+  url.search = "";
+  url.hash = "";
+  if (!url.pathname.endsWith("/index.html")) {
+    const path = url.pathname.endsWith("/") ? url.pathname : `${url.pathname}/`;
+    url.pathname = `${path}index.html`;
+  }
+  return url.toString();
+}
+
+function randomOAuthState() {
+  const bytes = new Uint8Array(16);
+  if (window.crypto?.getRandomValues) {
+    window.crypto.getRandomValues(bytes);
+    return [...bytes].map((byte) => byte.toString(16).padStart(2, "0")).join("");
+  }
+  return uid();
+}
+
+function startGoogleRedirectAuth(options = {}) {
+  const { prompt = account?.source === "google" ? "select_account" : "consent" } = options;
+  const oauthState = randomOAuthState();
+  sessionStorage.setItem(GOOGLE_REDIRECT_STATE_KEY, oauthState);
+  cloud.status = "connecting";
+  cloud.error = "";
+  persistCloudMeta();
+  const params = new URLSearchParams({
+    client_id: GOOGLE_CLIENT_ID,
+    redirect_uri: googleRedirectUri(),
+    response_type: "token",
+    scope: GOOGLE_SCOPES,
+    include_granted_scopes: "true",
+    state: oauthState,
+  });
+  if (prompt) params.set("prompt", prompt);
+  window.location.assign(`https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`);
+}
+
+async function handleGoogleRedirectReturn() {
+  if (!window.location.hash.includes("access_token") && !window.location.hash.includes("error=")) return false;
+  const params = new URLSearchParams(window.location.hash.slice(1));
+  window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+  const expectedState = sessionStorage.getItem(GOOGLE_REDIRECT_STATE_KEY);
+  sessionStorage.removeItem(GOOGLE_REDIRECT_STATE_KEY);
+
+  if (expectedState && params.get("state") !== expectedState) {
+    cloud.status = "error";
+    cloud.error = t("googleFailed");
+    persistCloudMeta();
+    notify(t("googleFailed"));
+    render();
+    return true;
+  }
+
+  if (params.get("error")) {
+    cloud.status = "error";
+    cloud.error = params.get("error_description") || t("googleRedirectMismatch");
+    persistCloudMeta();
+    notify(t("googleFailed"));
+    render();
+    return true;
+  }
+
+  const token = params.get("access_token");
+  if (!token) {
+    cloud.status = "error";
+    cloud.error = t("googleAccessMissing");
+    persistCloudMeta();
+    notify(t("googleFailed"));
+    render();
+    return true;
+  }
+
+  googleAccessToken = token;
+  account = {
+    id: GOOGLE_ACCOUNT_ID,
+    email: "Google Drive",
+    source: "google",
+    signedInAt: new Date().toISOString(),
+  };
+  localStorage.setItem(AUTH_KEY, JSON.stringify(account));
+  await syncFromGoogleDrive();
+  return true;
 }
 
 async function handleGoogleToken(response) {
@@ -2154,7 +2250,14 @@ function registerServiceWorker() {
   });
 }
 
-render();
-hydratePersistentState();
-restoreGoogleSession();
-registerServiceWorker();
+async function bootApp() {
+  const handledGoogleRedirect = await handleGoogleRedirectReturn();
+  if (!handledGoogleRedirect) {
+    render();
+    hydratePersistentState();
+    restoreGoogleSession();
+  }
+  registerServiceWorker();
+}
+
+bootApp();

@@ -152,6 +152,7 @@ const UI_TEXT = {
     localProfile: "Local profile",
     notYet: "not yet",
     syncStatusSyncing: "Syncing to Google Drive...",
+    syncStatusConnecting: "Reconnecting to Google Drive...",
     syncStatusReconnect: "Last Google Drive sync: {time}. Press Save to reconnect.",
     syncStatusSavedDrive: "Saved to Google Drive: {time}",
     syncStatusError: "Saved locally. Google Drive error: {error}",
@@ -167,6 +168,7 @@ const UI_TEXT = {
     googleClosed: "Google sign-in was closed or blocked",
     googleLoading: "Google sign-in is still loading. Try again in a moment.",
     googleFailed: "Google Drive connection failed",
+    googleReconnectFailed: "Google session could not be restored. Press Save to reconnect.",
     googleConnected: "Google Drive connected",
     driveSyncFailed: "Saved locally. Google Drive sync failed.",
     syncFailed: "sync failed",
@@ -323,6 +325,7 @@ const UI_TEXT = {
     localProfile: "Локальный профиль",
     notYet: "еще не было",
     syncStatusSyncing: "Синхронизация с Google Drive...",
+    syncStatusConnecting: "Восстанавливаю Google Drive...",
     syncStatusReconnect: "Последняя синхронизация: {time}. Нажми «Сохранить», чтобы подключиться заново.",
     syncStatusSavedDrive: "Сохранено в Google Drive: {time}",
     syncStatusError: "Сохранено локально. Ошибка Google Drive: {error}",
@@ -338,6 +341,7 @@ const UI_TEXT = {
     googleClosed: "Вход через Google был закрыт или заблокирован",
     googleLoading: "Google вход еще загружается. Попробуй через пару секунд.",
     googleFailed: "Не удалось подключить Google Drive",
+    googleReconnectFailed: "Не удалось восстановить Google сессию. Нажми «Сохранить», чтобы подключиться заново.",
     googleConnected: "Google Drive подключен",
     driveSyncFailed: "Сохранено локально. Синхронизация с Google Drive не удалась.",
     syncFailed: "синхронизация не удалась",
@@ -360,6 +364,7 @@ let account = loadAccount();
 let cloud = loadCloudMeta();
 let googleAccessToken = "";
 let googleTokenClient = null;
+let googleAuthMode = "interactive";
 let syncTimer = null;
 let syncAfterAuth = false;
 let theme = loadTheme();
@@ -532,7 +537,7 @@ async function manualSave() {
         syncAfterAuth = true;
         notify(t("savedConnect"));
         render();
-        connectGoogleDrive();
+        connectGoogleDrive({ prompt: "consent" });
         return;
       }
       await syncToGoogleDrive({ showMessage: true });
@@ -644,6 +649,13 @@ function initGoogleTokenClient() {
     scope: GOOGLE_SCOPES,
     callback: handleGoogleToken,
     error_callback: () => {
+      if (googleAuthMode === "silent") {
+        cloud.status = "offline";
+        cloud.error = t("googleReconnectFailed");
+        persistCloudMeta();
+        render();
+        return;
+      }
       cloud.status = "error";
       cloud.error = t("googleClosed");
       persistCloudMeta();
@@ -654,14 +666,17 @@ function initGoogleTokenClient() {
   return googleTokenClient;
 }
 
-function connectGoogleDrive() {
+function connectGoogleDrive(options = {}) {
+  const { prompt = account?.source === "google" ? "" : "consent", silent = false } = options;
   try {
     const client = initGoogleTokenClient();
-    cloud.status = "connecting";
+    googleAuthMode = silent ? "silent" : "interactive";
+    cloud.status = silent ? "connecting" : "syncing";
     cloud.error = "";
     persistCloudMeta();
-    client.requestAccessToken({ prompt: googleAccessToken ? "" : "consent" });
+    client.requestAccessToken({ prompt });
   } catch {
+    if (silent) return;
     notify(t("googleLoading"));
     render();
   }
@@ -669,6 +684,13 @@ function connectGoogleDrive() {
 
 async function handleGoogleToken(response) {
   if (response.error || !response.access_token) {
+    if (googleAuthMode === "silent") {
+      cloud.status = "offline";
+      cloud.error = t("googleReconnectFailed");
+      persistCloudMeta();
+      render();
+      return;
+    }
     cloud.status = "error";
     cloud.error = response.error || t("googleAccessMissing");
     persistCloudMeta();
@@ -677,6 +699,7 @@ async function handleGoogleToken(response) {
     return;
   }
   googleAccessToken = response.access_token;
+  googleAuthMode = "interactive";
   account = {
     id: GOOGLE_ACCOUNT_ID,
     email: "Google Drive",
@@ -685,6 +708,22 @@ async function handleGoogleToken(response) {
   };
   localStorage.setItem(AUTH_KEY, JSON.stringify(account));
   await syncFromGoogleDrive();
+}
+
+function restoreGoogleSession() {
+  if (account?.source !== "google" || googleAccessToken) return;
+  const startedAt = Date.now();
+  const tryReconnect = () => {
+    if (account?.source !== "google" || googleAccessToken) return;
+    if (window.google?.accounts?.oauth2) {
+      connectGoogleDrive({ prompt: "", silent: true });
+      return;
+    }
+    if (Date.now() - startedAt < 8000) {
+      window.setTimeout(tryReconnect, 250);
+    }
+  };
+  window.setTimeout(tryReconnect, 350);
 }
 
 function scheduleCloudSync() {
@@ -1281,6 +1320,7 @@ function accountLabel() {
 function syncStatusText() {
   if (account?.source === "google") {
     if (cloud.status === "syncing") return t("syncStatusSyncing");
+    if (cloud.status === "connecting") return t("syncStatusConnecting");
     if (!googleAccessToken) return t("syncStatusReconnect", { time: formatSavedAt(cloud.lastSyncedAt) });
     if (cloud.status === "synced") return t("syncStatusSavedDrive", { time: formatSavedAt(cloud.lastSyncedAt) });
     if (cloud.status === "error") return t("syncStatusError", { error: cloud.error || t("syncFailed") });
@@ -1987,4 +2027,5 @@ function registerServiceWorker() {
 
 render();
 hydratePersistentState();
+restoreGoogleSession();
 registerServiceWorker();

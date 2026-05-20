@@ -295,8 +295,6 @@ select:focus-visible {
 
 .eyebrow,
 .field label,
-.metric span,
-.save-status,
 .pill {
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -316,6 +314,30 @@ select:focus-visible {
   font-size: clamp(31px, 10vw, 56px);
   line-height: 0.95;
   letter-spacing: -0.055em;
+}
+
+.command-title h2 {
+  margin: 0;
+  font-size: clamp(29px, 8.4vw, 48px);
+  line-height: 1.02;
+  letter-spacing: -0.055em;
+  font-weight: 760;
+}
+
+.review-alert {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 0 12px;
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface-2) 78%, transparent);
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.2;
+  font-weight: 700;
 }
 
 .intro-copy,
@@ -340,7 +362,7 @@ select:focus-visible {
 }
 
 .command-panel {
-  padding: 20px;
+  padding: 22px;
   margin-bottom: 14px;
 }
 
@@ -353,6 +375,29 @@ select:focus-visible {
   grid-template-columns: 1.1fr 0.9fr;
   gap: 10px;
   margin-top: 20px;
+}
+
+.review-cta {
+  display: grid;
+  align-content: center;
+  gap: 4px;
+  text-align: left;
+}
+
+.review-cta span {
+  display: block;
+}
+
+.review-cta small {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.25;
+}
+
+.review-cta:disabled {
+  opacity: 0.68;
+  background: color-mix(in srgb, var(--surface-2) 78%, transparent);
 }
 
 .metrics {
@@ -377,7 +422,12 @@ select:focus-visible {
 .metric span {
   display: block;
   margin-top: 8px;
-  color: var(--faint);
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.25;
+  font-weight: 650;
+  letter-spacing: 0;
+  text-transform: none;
 }
 
 .save-row {
@@ -405,13 +455,74 @@ select:focus-visible {
   letter-spacing: 0;
 }
 
-.section-title {
+.drive-strip {
+  min-height: 42px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 9px;
+  margin: -10px 0 14px;
+  padding: 6px 7px 6px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.2;
+  box-shadow: none;
+}
+
+.drive-strip span:not(.drive-dot) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.drive-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--good);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--good) 14%, transparent);
+}
+
+.drive-strip.error .drive-dot {
+  background: var(--bad);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--bad) 14%, transparent);
+}
+
+.drive-action,
+.compact-action {
+  min-height: 34px;
+  white-space: nowrap;
+}
+
+.library-preview-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  margin: 24px 0 12px;
+}
+
+.library-preview-head .section-title {
+  margin-bottom: 4px;
+}
+
+.library-preview-head p {
+  margin: 0;
+  color: var(--muted);
   font-size: 13px;
+  line-height: 1.35;
+}
+
+.section-title {
+  font-size: 15px;
   line-height: 1.2;
   margin: 0 0 12px;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
+  color: var(--ink);
+  text-transform: none;
+  letter-spacing: -0.02em;
 }
 
 .text-card,
@@ -659,6 +770,32 @@ form[onsubmit^="saveTextEdit"] textarea[name="content"] {
   background: var(--surface-grad);
 }
 
+.settings-actions,
+.library-tools {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.settings-actions {
+  grid-template-columns: 1fr;
+}
+
+.library-tools {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.library-tools .eyebrow {
+  margin-bottom: 5px;
+}
+
+.library-tools .hint {
+  margin: 0;
+  font-size: 13px;
+}
+
 .lesson-shell {
   position: relative;
   max-width: 720px;
@@ -872,6 +1009,29 @@ form[onsubmit^="saveTextEdit"] textarea[name="content"] {
   line-height: 1.5;
 }
 
+.helpful-empty {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+}
+
+.helpful-empty h3 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 20px;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+}
+
+.helpful-empty p {
+  max-width: 320px;
+  margin: 0;
+}
+
+.helpful-empty .compact-action {
+  margin-top: 8px;
+}
+
 .screen-actions {
   position: sticky;
   bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom));
@@ -936,6 +1096,16 @@ form[onsubmit^="saveTextEdit"] textarea[name="content"] {
   .quick-actions,
   .save-row {
     grid-template-columns: 1fr;
+  }
+
+  .library-preview-head,
+  .library-tools {
+    grid-template-columns: 1fr;
+  }
+
+  .library-preview-head .mini,
+  .library-tools .compact-action {
+    width: 100%;
   }
 
   .metrics {

@@ -1,9 +1,9 @@
-const CACHE_NAME = "rubik-duo-cache-v19";
+const CACHE_NAME = "rubik-duo-cache-v21";
 const APP_ASSETS = [
   "./",
   "./index.html",
-  "./styles.css?v=19",
-  "./app.js?v=19",
+  "./styles.css?v=21",
+  "./app.js?v=21",
   "./manifest.json",
   "./icon.svg"
 ];

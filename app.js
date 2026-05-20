@@ -14,6 +14,7 @@ const DRIVE_FILE_NAME = "rubik-duo-state.json";
 const UI_TEXT = {
   en: {
     appSubtitle: "Your second memory",
+    navHome: "Home",
     navLibrary: "Library",
     navReview: "Review",
     navSettings: "Settings",
@@ -28,23 +29,40 @@ const UI_TEXT = {
     useOffline: "Use this device offline",
     today: "Today",
     phrasesNeedCare: "Review queue: {count} {phraseWord}",
-    readySummary: "{ready} {textWord} ready for lessons. {phrases} {phraseWord} saved.",
-    startSummary: "Start by adding one Italian text.",
+    startSummary: "One text → living phrases → a short lesson.",
+    startSupport: "Add a text, choose the phrases that matter, and lock them in with exercises.",
     newText: "New Text",
+    addText: "Add text",
     reviewToday: "Review Today",
-    textsMetric: "texts / {max}",
-    phrasesMetric: "phrases",
-    reviewMetric: "review",
+    reviewAction: "Review",
+    phrasesToday: "{count} {phraseWord} today",
+    textsMetric: "Texts",
+    phrasesMetric: "Phrases",
+    reviewMetric: "Today",
+    ofMax: "{count} of {max}",
     save: "Save",
     saveNow: "Save now",
+    syncNow: "Sync now",
+    syncCompact: "Sync",
+    connectGoogle: "Connect",
     removeDuplicates: "Remove duplicates",
+    duplicateToolTitle: "Tools",
+    deleteDuplicatesConfirm: "Remove duplicate texts?",
     switchAccount: "Switch account",
     myTexts: "My Texts",
+    myTextsPreview: "Your latest texts stay here.",
+    openLibrary: "Open My Texts",
+    allTexts: "All texts",
+    recentTexts: "Recent texts",
+    librarySubtitle: "Saved texts and phrase sources",
     open: "Open",
     edit: "Edit",
     delete: "Delete",
     weak: "weak",
-    noTexts: "No texts yet. Add your first text and a few phrases to start a lesson.",
+    noTextsTitle: "No texts yet.",
+    noTexts: "Add your first text to build your first lesson.",
+    noSavedTexts: "No saved texts yet.",
+    noSavedTextsCopy: "Upload your first text to create a lesson.",
     textWorkspaceOpened: "Text workspace opened",
     textWorkspace: "Text Workspace",
     sourceContext: "Source context",
@@ -112,7 +130,7 @@ const UI_TEXT = {
     createdPhrases: "Created phrases: {count}. Add meanings and save all.",
     noNewPhrases: "No new phrases found",
     toClear: "{count}/3 to clear",
-    noReview: "Nothing to review yet. Weak phrases will appear here automatically.",
+    noReview: "Nothing to review today. Add a text or come back later when phrases are ready.",
     reviewWeakPhrases: "Review weak phrases",
     settings: "Settings",
     themeStorage: "Theme and storage",
@@ -148,6 +166,12 @@ const UI_TEXT = {
     backHome: "Back home",
     googleDriveConnected: "Google Drive connected",
     googleDrive: "Google Drive",
+    driveSavedAt: "Google Drive · saved {time}",
+    driveSyncedAt: "Google Drive · synced {time}",
+    driveSyncing: "Syncing...",
+    driveError: "Sync error",
+    driveNotConnected: "Google Drive not connected",
+    driveReconnect: "Google Drive · reconnect",
     offlineDevice: "Offline on this device",
     localProfile: "Local profile",
     notYet: "not yet",
@@ -187,6 +211,7 @@ const UI_TEXT = {
   },
   ru: {
     appSubtitle: "Твоя вторая память",
+    navHome: "Главная",
     navLibrary: "Библиотека",
     navReview: "Повторение",
     navSettings: "Настройки",
@@ -201,23 +226,40 @@ const UI_TEXT = {
     useOffline: "Использовать это устройство офлайн",
     today: "Сегодня",
     phrasesNeedCare: "Нужно повторить: {count} {phraseWord}",
-    readySummary: "Готово к урокам: {ready} {textWord}. Сохранено: {phrases} {phraseWord}.",
-    startSummary: "Начни с одного итальянского текста.",
+    startSummary: "Один текст → живые фразы → короткий урок.",
+    startSupport: "Загрузи текст, выбери нужные фразы и закрепи их упражнениями.",
     newText: "Новый текст",
+    addText: "Добавить текст",
     reviewToday: "Повторить сегодня",
-    textsMetric: "текстов / {max}",
-    phrasesMetric: "фразы",
-    reviewMetric: "повторение",
+    reviewAction: "Повторение",
+    phrasesToday: "{count} {phraseWord} сегодня",
+    textsMetric: "Тексты",
+    phrasesMetric: "Фразы",
+    reviewMetric: "Сегодня",
+    ofMax: "{count} из {max}",
     save: "Сохранить",
     saveNow: "Сохранить сейчас",
+    syncNow: "Синхронизировать сейчас",
+    syncCompact: "Синхронизировать",
+    connectGoogle: "Подключить",
     removeDuplicates: "Удалить дубликаты",
+    duplicateToolTitle: "Инструменты",
+    deleteDuplicatesConfirm: "Удалить дубликаты текстов?",
     switchAccount: "Сменить вход",
     myTexts: "Мои тексты",
+    myTextsPreview: "Последние тексты остаются под рукой.",
+    openLibrary: "Открыть мои тексты",
+    allTexts: "Все тексты",
+    recentTexts: "Последние тексты",
+    librarySubtitle: "Сохранённые тексты и источники фраз",
     open: "Открыть",
     edit: "Править",
     delete: "Удалить",
     weak: "слабые",
-    noTexts: "Пока нет текстов. Добавь первый текст и несколько фраз, чтобы начать урок.",
+    noTextsTitle: "Пока нет текстов.",
+    noTexts: "Добавь первый текст, чтобы собрать свой первый урок.",
+    noSavedTexts: "Пока нет сохранённых текстов.",
+    noSavedTextsCopy: "Загрузи первый текст, чтобы создать урок.",
     textWorkspaceOpened: "Меню текста открыто",
     textWorkspace: "Меню текста",
     sourceContext: "Исходный текст",
@@ -285,7 +327,7 @@ const UI_TEXT = {
     createdPhrases: "Создано фраз: {count}. Добавь смысл и сохрани все.",
     noNewPhrases: "Новых фраз не найдено",
     toClear: "{count}/3 до выхода",
-    noReview: "Пока нечего повторять. Слабые фразы появятся здесь автоматически.",
+    noReview: "Сегодня повторять нечего. Добавь текст или вернись позже, когда появятся фразы для повторения.",
     reviewWeakPhrases: "Повторить слабые фразы",
     settings: "Настройки",
     themeStorage: "Тема и хранение",
@@ -321,6 +363,12 @@ const UI_TEXT = {
     backHome: "На главный экран",
     googleDriveConnected: "Google Drive подключен",
     googleDrive: "Google Drive",
+    driveSavedAt: "Google Drive · сохранено {time}",
+    driveSyncedAt: "Google Drive · синхронизировано {time}",
+    driveSyncing: "Синхронизация...",
+    driveError: "Ошибка синхронизации",
+    driveNotConnected: "Google Drive не подключен",
+    driveReconnect: "Google Drive · нужно подключить",
     offlineDevice: "Офлайн на этом устройстве",
     localProfile: "Локальный профиль",
     notYet: "еще не было",
@@ -1220,6 +1268,7 @@ function renderAppView() {
   if (!account || view.name === "login") return renderLogin();
   if (view.name === "new-text") return renderNewText();
   if (view.name === "edit-text") return renderEditText(view.textId);
+  if (view.name === "library") return renderLibrary();
   if (view.name === "text") return renderTextDetail(view.textId);
   if (view.name === "bulk-phrases") return renderBulkPhrases(view.textId);
   if (view.name === "phrase-form") return renderPhraseForm(view.textId, view.phraseId);
@@ -1239,7 +1288,7 @@ function renderBottomNav() {
   `;
   return `
     <nav class="bottom-nav" aria-label="${t("primaryNavigation")}">
-      ${item({ name: "home" }, t("navLibrary"), "⌂", ["home"])}
+      ${item({ name: "home" }, t("navHome"), "⌂", ["home", "library"])}
       ${item({ name: "poop" }, t("navReview"), "◌", ["poop"])}
       ${item({ name: "settings" }, t("navSettings"), "⌘", ["settings"])}
     </nav>
@@ -1292,6 +1341,14 @@ function formatSavedAt(value) {
   });
 }
 
+function formatTime(value) {
+  if (!value) return "";
+  return new Date(value).toLocaleTimeString(language === "ru" ? "ru-RU" : "en-GB", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
 function pluralRu(count, one, few, many) {
   const value = Math.abs(count) % 100;
   const last = value % 10;
@@ -1329,16 +1386,100 @@ function syncStatusText() {
   return t("syncStatusLocalDevice", { time: formatSavedAt(state.savedAt) });
 }
 
+function driveStatusPillText() {
+  if (account?.source !== "google") return t("driveNotConnected");
+  if (cloud.status === "syncing" || cloud.status === "connecting") return t("driveSyncing");
+  if (cloud.status === "error") return t("driveError");
+  if (!googleAccessToken) return t("driveReconnect");
+  const time = formatTime(cloud.lastSyncedAt || state.savedAt);
+  if (time) return t(cloud.lastSyncedAt ? "driveSyncedAt" : "driveSavedAt", { time });
+  return t("googleDriveConnected");
+}
+
+function driveActionLabel() {
+  if (account?.source !== "google") return t("connectGoogle");
+  return t("syncCompact");
+}
+
+function driveActionHandler() {
+  return account?.source === "google" ? "manualSave()" : "connectGoogleDrive()";
+}
+
+function isDriveBusy() {
+  return cloud.status === "syncing" || cloud.status === "connecting";
+}
+
 function renderHome() {
   const phrases = allPhrases();
   const poop = poopPhrases();
-  const readyTexts = state.texts.filter((text) => trainablePhrases(text).length).length;
+  const reviewCopy = t("phrasesToday", { count: poop.length, phraseWord: phraseWord(poop.length) });
+  const recentCards = state.texts.length
+    ? state.texts.slice(0, 2).map((text) => `
+      <article class="text-card compact-text-card">
+        <div>
+          <h3>${escapeHtml(text.title)}</h3>
+          <p>${text.phrases.length} ${phraseWord(text.phrases.length)} · ${escapeHtml(text.content.slice(0, 72))}${text.content.length > 72 ? "..." : ""}</p>
+        </div>
+        <span class="pill">${text.phrases.filter((phrase) => phrase.inPoop).length} ${t("weak")}</span>
+        <div class="card-actions">
+          <button class="mini good" onclick="openText('${text.id}')">${t("open")}</button>
+        </div>
+      </article>
+    `).join("")
+    : `
+      <div class="empty helpful-empty">
+        <h3>${t("noTextsTitle")}</h3>
+        <p>${t("noTexts")}</p>
+        <button class="secondary compact-action" onclick="setView({name:'new-text'})">${t("addText")}</button>
+      </div>
+    `;
+
+  return `
+    ${renderTopbar()}
+    ${renderToast()}
+    <div class="drive-strip ${cloud.status === "error" ? "error" : ""}">
+      <span class="drive-dot" aria-hidden="true"></span>
+      <span>${escapeHtml(driveStatusPillText())}</span>
+      <button class="mini drive-action" onclick="${driveActionHandler()}" ${isDriveBusy() ? "disabled" : ""}>${driveActionLabel()}</button>
+    </div>
+    <section class="command-panel">
+      <p class="eyebrow">${t("today")}</p>
+      <div class="command-title">
+        ${poop.length ? `<div class="review-alert">${t("phrasesNeedCare", { count: poop.length, phraseWord: phraseWord(poop.length) })}</div>` : ""}
+        <h2>${t("startSummary")}</h2>
+        <p>${t("startSupport")}</p>
+      </div>
+      <div class="quick-actions">
+        <button class="primary" onclick="setView({name:'new-text'})">${t("newText")}</button>
+        <button class="secondary review-cta" onclick="setView({name:'poop'})" ${poop.length ? "" : "disabled"} aria-label="${escapeHtml(`${t("reviewAction")}: ${reviewCopy}`)}">
+          <span>${t("reviewAction")}</span>
+          <small>${reviewCopy}</small>
+        </button>
+      </div>
+    </section>
+    <div class="metrics study-metrics">
+      <div class="metric"><strong>${t("ofMax", { count: state.texts.length, max: MAX_TEXTS })}</strong><span>${t("textsMetric")}</span></div>
+      <div class="metric"><strong>${phrases.length}</strong><span>${t("phrasesMetric")}</span></div>
+      <div class="metric"><strong>${poop.length}</strong><span>${t("reviewMetric")}</span></div>
+    </div>
+    <div class="library-preview-head">
+      <div>
+        <h2 class="section-title">${t("myTexts")}</h2>
+        <p>${t("myTextsPreview")}</p>
+      </div>
+      <button class="mini" onclick="setView({name:'library'})">${t("openLibrary")}</button>
+    </div>
+    <div class="stack">${recentCards}</div>
+  `;
+}
+
+function renderLibrary() {
   const cards = state.texts.length
     ? state.texts.map((text) => `
       <article class="text-card">
         <div>
           <h3>${escapeHtml(text.title)}</h3>
-          <p>${text.phrases.length} ${phraseWord(text.phrases.length)} · ${escapeHtml(text.content.slice(0, 72))}${text.content.length > 72 ? "..." : ""}</p>
+          <p>${text.phrases.length} ${phraseWord(text.phrases.length)} · ${escapeHtml(text.content.slice(0, 92))}${text.content.length > 92 ? "..." : ""}</p>
         </div>
         <span class="pill">${text.phrases.filter((phrase) => phrase.inPoop).length} ${t("weak")}</span>
         <div class="card-actions">
@@ -1348,38 +1489,25 @@ function renderHome() {
         </div>
       </article>
     `).join("")
-    : `<div class="empty">${t("noTexts")}</div>`;
+    : `
+      <div class="empty helpful-empty">
+        <h3>${t("noSavedTexts")}</h3>
+        <p>${t("noSavedTextsCopy")}</p>
+        <button class="secondary compact-action" onclick="setView({name:'new-text'})">${t("addText")}</button>
+      </div>
+    `;
 
   return `
-    ${renderTopbar()}
+    ${renderTopbar(t("myTexts"), t("librarySubtitle"), { name: "home" })}
     ${renderToast()}
-    <section class="command-panel">
-      <p class="eyebrow">${t("today")}</p>
-      <div class="command-title">
-        ${poop.length ? `<h1>${t("phrasesNeedCare", { count: poop.length, phraseWord: phraseWord(poop.length) })}</h1>` : ""}
-        <p>${state.texts.length ? t("readySummary", { ready: readyTexts, textWord: textWord(readyTexts), phrases: phrases.length, phraseWord: phraseWord(phrases.length) }) : t("startSummary")}</p>
+    <section class="library-tools panel">
+      <div>
+        <p class="eyebrow">${t("duplicateToolTitle")}</p>
+        <p class="hint">${state.texts.length} ${textWord(state.texts.length)} · ${allPhrases().length} ${phraseWord(allPhrases().length)}</p>
       </div>
-      <div class="quick-actions">
-        <button class="primary" onclick="setView({name:'new-text'})">${t("newText")}</button>
-        <button class="secondary" onclick="setView({name:'poop'})" ${poop.length ? "" : "disabled"}>${t("reviewToday")}</button>
-      </div>
+      <button class="secondary compact-action" onclick="removeDuplicateTexts()" ${state.texts.length < 2 ? "disabled" : ""}>${t("removeDuplicates")}</button>
     </section>
-    <div class="metrics">
-      <div class="metric"><strong>${state.texts.length}</strong><span>${t("textsMetric", { max: MAX_TEXTS })}</span></div>
-      <div class="metric"><strong>${phrases.length}</strong><span>${t("phrasesMetric")}</span></div>
-      <div class="metric"><strong>${poop.length}</strong><span>${t("reviewMetric")}</span></div>
-    </div>
-    <div class="hero-actions">
-      <div class="save-row">
-        <button class="secondary account-button" onclick="setView({name:'login'})">${escapeHtml(accountLabel())}</button>
-        <button class="primary save-button" onclick="manualSave()">${t("save")}</button>
-      </div>
-      <p class="save-status">${escapeHtml(syncStatusText())}</p>
-      ${account?.source === "google" ? "" : `<button class="secondary" onclick="connectGoogleDrive()">${t("syncGoogle")}</button>`}
-      <button class="secondary" onclick="removeDuplicateTexts()" ${state.texts.length < 2 ? "disabled" : ""}>${t("removeDuplicates")}</button>
-      <button class="ghost" onclick="switchAccount()">${t("switchAccount")}</button>
-    </div>
-    <h2 class="section-title" style="margin-top:28px">${t("myTexts")}</h2>
+    <h2 class="section-title">${t("allTexts")}</h2>
     <div class="stack">${cards}</div>
   `;
 }
@@ -1713,6 +1841,7 @@ function deleteText(textId) {
 }
 
 function removeDuplicateTexts() {
+  if (!window.confirm(t("deleteDuplicatesConfirm"))) return;
   const seen = new Set();
   const before = state.texts.length;
   state.texts = state.texts.filter((text) => {
@@ -1817,9 +1946,9 @@ function renderSettings() {
       <p class="eyebrow">${t("storage")}</p>
       <h2>${escapeHtml(accountLabel())}</h2>
       <p class="hint">${escapeHtml(syncStatusText())}</p>
-      <div class="stack" style="margin-top:16px">
-        <button class="primary" onclick="manualSave()">${t("saveNow")}</button>
-        ${account?.source === "google" ? "" : `<button class="secondary" onclick="connectGoogleDrive()">${t("syncGoogle")}</button>`}
+      <div class="settings-actions">
+        <button class="secondary" onclick="${driveActionHandler()}" ${isDriveBusy() ? "disabled" : ""}>${account?.source === "google" ? t("syncNow") : t("syncGoogle")}</button>
+        <button class="ghost" onclick="switchAccount()">${t("switchAccount")}</button>
       </div>
     </section>
   `;
